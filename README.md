@@ -1,8 +1,8 @@
-# AFT150-D50 호스트 프로그램 (Linux)
+# AFT150-D50 샘플 프로그램 (Linux)
 
 AIDIN ROBOTICS 6축 힘/토크 센서 **AFT150-D50** 을 리눅스 PC 에서 사용하기 위한 프로그램입니다.
 
-그림이 포함된 상세 안내는 **[GUIDE.html](GUIDE.html)** 을 내려받아 브라우저로 여세요.
+그림이 포함된 상세 안내는 **[guide.html](guide.html)** 을 내려받아 브라우저로 여세요.
 
 ---
 
@@ -16,16 +16,16 @@ uname -m
 
 | 결과 | 장비 | 내려받을 파일 |
 |---|---|---|
-| `x86_64` | 일반 PC | `aft150_d50_hosttool_linux_v1.0.1_bin_x86_64.tar.gz` |
-| `aarch64` | Jetson 등 | `aft150_d50_hosttool_linux_v1.0.1_bin_aarch64.tar.gz` |
+| `x86_64` | 일반 PC | `aft150-d50-sample-program-linux-v1.0.1-bin-x86_64.tar.gz` |
+| `aarch64` | Jetson 등 | `aft150-d50-sample-program-linux-v1.0.1-bin-aarch64.tar.gz` |
 
 > **Ubuntu 22.04 이상**이 필요합니다.
 
 ## 2. 설치
 
 ```bash
-tar xzf aft150_d50_hosttool_linux_v1.0.1_bin_x86_64.tar.gz
-cd aft150_d50_hosttool_linux_v1.0.1_bin_x86_64
+tar xzf aft150-d50-sample-program-linux-v1.0.1-bin-x86_64.tar.gz
+cd aft150-d50-sample-program-linux-v1.0.1-bin-x86_64
 
 sudo ./install.sh
 ```
@@ -42,7 +42,7 @@ CAN 어댑터 드라이버, 자동 기동 설정, 메뉴 아이콘까지 한 번
 ./run.sh
 ```
 
-메뉴의 **AFT150-D50 호스트 프로그램** 아이콘으로도 실행됩니다.
+메뉴의 **AFT150-D50 샘플 프로그램** 아이콘으로도 실행됩니다.
 
 ## 4. 사용 순서
 
