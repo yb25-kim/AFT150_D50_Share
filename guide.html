@@ -90,10 +90,10 @@
 <div class="wrap">
 
   <div class="meta">
-    <span class="chip">버전 <b>v1.0.1</b></span>
+    <span class="chip">버전 <b>v1.1.0</b></span>
     <span class="chip">대상 <b>Linux (x86_64 / aarch64)</b></span>
-    <span class="chip">배포본 <b>aft150-d50-sample-program-linux-v1.0.1.tar.gz</b></span>
-    <span class="chip rev-chip">Rev. <b>2026-09-18</b></span>
+    <span class="chip">배포본 <b>aft150-d50-sample-program-linux-v1.1.0-bin-aarch64.tar.gz</b></span>
+    <span class="chip rev-chip">Rev. <b>2026-10-02</b></span>
   </div>
 
   <p class="lead">
@@ -104,11 +104,11 @@
   <section>
     <h2><span class="num">1</span>설치</h2>
     <p>터미널에서 아래 세 줄을 순서대로 실행합니다.</p>
-<pre><code>tar xzf aft150-d50-sample-program-linux-v1.0.1.tar.gz
-cd aft150-d50-sample-program-linux-v1.0.1
+<pre><code>tar xzf aft150-d50-sample-program-linux-v1.1.0-bin-aarch64.tar.gz
+cd aft150-d50-sample-program-linux-v1.1.0-bin-aarch64
 sudo ./install.sh</code></pre>
     <p>
-      <code>install.sh</code> 가 파이썬 의존성, CAN 어댑터 드라이버, 자동 기동 설정(udev·systemd),
+      <code>install.sh</code> 가 CAN 어댑터 드라이버, 자동 기동 설정(udev·systemd),
       메뉴 아이콘까지 한 번에 처리합니다. 설치 중 sudo 비밀번호를 물어봅니다.
     </p>
     <div class="steps">
@@ -119,11 +119,11 @@ sudo ./install.sh</code></pre>
     <h3>설치 전 확인할 것</h3>
     <table>
       <tr><th>조건</th><th>설명</th></tr>
-      <tr><td><b>인터넷 연결</b></td><td>파이썬·시스템 패키지를 내려받습니다. 오프라인 설치는 지원하지 않습니다</td></tr>
+      <tr><td><b>인터넷 연결</b></td><td>시스템 패키지를 내려받습니다. 오프라인 설치는 지원하지 않습니다</td></tr>
       <tr><td><b>sudo 권한</b></td><td>드라이버·udev·systemd 설치에 필요합니다</td></tr>
       <tr><td><b>데스크톱 환경</b></td><td>GUI 프로그램이라 화면이 필요합니다. 헤드리스 서버에서는 실행되지 않습니다</td></tr>
       <tr><td>배포판</td><td><code>apt</code> / <code>dnf</code> / <code>yum</code> / <code>pacman</code> / <code>zypper</code> 를 인식합니다</td></tr>
-      <tr><td>Python</td><td>3.8 이상 (Ubuntu 20.04 이상이면 충족)</td></tr>
+      <tr><td>Jetson</td><td>JetPack 6 (Ubuntu 22.04) 에서 확인</td></tr>
     </table>
     <p class="muted">커널 헤더와 빌드 도구는 <code>install.sh</code> 가 알아서 설치합니다 (드라이버 빌드에 필요).</p>
   </section>
@@ -146,22 +146,23 @@ sudo ./install.sh</code></pre>
     <p><b>USB 어댑터는 꽂기만 하면 준비됩니다</b> (재부팅 후에도). <code>install.sh</code> 가 그렇게 설정합니다.</p>
     <table>
       <tr><th>어댑터</th><th>인식 형태</th><th>비고</th></tr>
-      <tr><td>PEAK PCAN-USB / FD</td><td>SocketCAN <code>canN</code></td><td>CAN FD + BRS 지원</td></tr>
-      <tr><td>IXXAT USB-to-CAN (FD)</td><td>SocketCAN <code>canN</code></td><td>CAN FD + BRS 지원</td></tr>
-      <tr><td>CANable (slcan 펌웨어)</td><td><code>/dev/ttyACM0</code></td><td>클래식 CAN 2.0 전용</td></tr>
+      <tr><td>PEAK PCAN-USB FD</td><td>SocketCAN <code>canN</code></td><td>CAN FD (1M/4M) / CAN 2.0</td></tr>
+      <tr><td>PEAK PCAN-USB</td><td>SocketCAN <code>canN</code></td><td>CAN 2.0</td></tr>
+      <tr><td>CANable 2.0 (AIDIN 펌웨어)</td><td><code>/dev/ttyACM0</code></td><td>CAN FD (1M/4M) / CAN 2.0</td></tr>
+      <tr><td>CANable 2.0 (순정 펌웨어)</td><td><code>/dev/ttyACM0</code></td><td>CAN 2.0</td></tr>
       <tr><td>가상 CAN (하드웨어 없이 시험)</td><td><code>vcan0</code></td><td><code>sudo scripts/can-up.sh vcan0</code></td></tr>
     </table>
-    <p>
-      IXXAT 드라이버는 어떤 배포판에도 포함돼 있지 않아 설치 시 빌드합니다.
-      DKMS 에 등록되므로 <b>커널을 업데이트해도 자동으로 다시 빌드</b>됩니다.
-      PCAN 은 일반 Ubuntu 라면 대개 이미 들어 있습니다.
-    </p>
-    <h3>인터페이스 이름(<code>canN</code>)은 고정이 아닙니다</h3>
-    <p>
-      번호는 인식되는 순서대로 붙습니다. 그래서 프로그램은 이름을 정해 두지 않고
-      <b>실행할 때마다 스캔</b>합니다. 실행 후에 어댑터를 꽂았다면 화면의
-      <code>새로고침</code> 버튼을 누르세요.
-    </p>
+    <h3>CANable 펌웨어 (CAN FD 사용 시)</h3>
+    <p>어댑터마다 한 번 굽습니다. <code>sudo ./install.sh</code> 를 먼저 실행해 두세요.</p>
+<pre><code>sudo scripts/canable-fw/flash-canable.sh
+# "기다립니다" 가 나오면 BOOT 두 핀(120R 옆, 보드 표기 BOOT)에 점퍼 캡을 꽂고 USB 연결
+# 끝나면 점퍼 캡을 빼고 USB 다시 연결</code></pre>
+    <p class="muted">점퍼 캡이 꽂혀 있으면 CAN 통신이 되지 않습니다.</p>
+    <h3>센서 여러 개</h3>
+<pre><code>sudo scripts/name-adapters.sh     # 어댑터에 aft150-a, aft150-b ... 이름 붙이기
+./run.sh aft150-a
+./run.sh aft150-b                 # 다른 터미널에서</code></pre>
+    <p class="muted">PCAN 은 이름을 붙인 뒤 USB 를 다시 꽂아야 적용됩니다. 같은 USB 포트에 꽂아 주세요.</p>
     <h3>비트레이트 변경</h3>
     <p><code>/etc/default/aft-can</code> 을 편집합니다.</p>
 <pre><code>CAN_BITRATE=1000000     CAN_SAMPLE_POINT=0.875   CAN_SJW=4
@@ -215,18 +216,23 @@ CAN_DBITRATE=4000000    CAN_DSAMPLE_POINT=0.75   CAN_DSJW=5</code></pre>
         <td><code>dialout</code> 그룹 권한 문제입니다. <b>로그아웃 후 다시 로그인</b>하세요</td>
       </tr>
       <tr>
-        <td>IXXAT 가 안 잡힌다</td>
-        <td><code>sudo ./install.sh</code> 를 다시 실행하세요. 커널 업데이트 직후라면 드라이버 재빌드가 필요합니다</td>
+        <td>CANable 로 CAN FD 데이터가 안 나온다</td>
+        <td>CANable 펌웨어를 굽고, BOOT 점퍼 캡을 뺐는지 확인하세요</td>
       </tr>
     </table>
   </section>
 
   <div class="rev">
     <h2><span class="num">✎</span>변경 이력</h2>
+    <p><span class="tag">v1.1.0</span> 2026-10-02</p>
+    <ul>
+      <li>센서 여러 개 동시 사용 (어댑터 고정 이름, 실행 시 어댑터 지정)</li>
+      <li>CANable CAN FD (1M/4M) 지원 — 펌웨어 동봉</li>
+      <li>그래프 시작 시 Y축 표시 개선</li>
+      <li>IXXAT 어댑터 지원 종료</li>
+    </ul>
     <p><span class="tag">v1.0.1</span> 2026-09-18</p>
     <ul>
-      <li>IXXAT 어댑터가 최신 커널(6.13 이상)에서 인식되지 않던 문제 해결</li>
-      <li>IXXAT 드라이버 DKMS 등록 — 커널 업데이트 시 자동 재빌드</li>
       <li>설치 스크립트가 드라이버 설치 실패를 알리지 않던 문제 해결</li>
       <li>지원 배포판 확대 (<code>dnf</code> / <code>yum</code> / <code>pacman</code> / <code>zypper</code>)</li>
     </ul>
@@ -236,7 +242,7 @@ CAN_DBITRATE=4000000    CAN_DSAMPLE_POINT=0.75   CAN_DSJW=5</code></pre>
 </div>
 
 <footer>
-  AIDIN ROBOTICS · AFT150-D50-C 샘플 프로그램 (Linux) v1.0.1 · Rev. 2026-09-18<br>
+  AIDIN ROBOTICS · AFT150-D50-C 샘플 프로그램 (Linux) v1.1.0 · Rev. 2026-10-02<br>
   제3자 소프트웨어 라이선스는 배포본의 <code>THIRD-PARTY-NOTICES.md</code> 를 참조하세요.
 </footer>
 </body>
